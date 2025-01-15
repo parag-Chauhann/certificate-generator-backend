@@ -8,9 +8,9 @@ const archiver = require('archiver');
 const multer = require('multer');  // Add multer for file uploads
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;  // Use Render's dynamic port
 
-// Enable CORS for all origins
+// Enable CORS for all origins (update if needed)
 app.use(cors());
 
 // Set up multer for file uploads
@@ -72,7 +72,7 @@ app.post('/api/convert', upload.array('files'), async (req, res) => {
     } catch (error) {
         console.error('Error during conversion:', error);
         // Return an error response if any exception occurs
-        res.status(500).json({ error: 'Error during conversion. Check server logs for details.' });
+        res.status(500).json({ error: `Error during conversion: ${error.message}` });
     }
 });
 
