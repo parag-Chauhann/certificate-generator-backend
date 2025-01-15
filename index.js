@@ -25,6 +25,8 @@ app.post('/api/convert', upload.array('files'), async (req, res) => {
             return res.status(400).json({ error: 'No files uploaded' });
         }
 
+        console.log('Uploaded files:', req.files);  // Log uploaded files
+
         const convertedFiles = [];
 
         // Process each uploaded file
@@ -36,6 +38,7 @@ app.post('/api/convert', upload.array('files'), async (req, res) => {
             await new Promise((resolve, reject) => {
                 libre.convert(file.buffer, ext, undefined, (err, done) => {
                     if (err) {
+                        console.error(`Error converting file: ${file.originalname}`, err); // Log error
                         reject(`Error converting file: ${file.originalname}`);
                     }
                     fs.writeFileSync(outputFile.name, done);
@@ -65,13 +68,12 @@ app.post('/api/convert', upload.array('files'), async (req, res) => {
             // Send the ZIP file to the client as a download
             res.download(zipFile.name, 'converted-files.zip', (err) => {
                 if (err) {
-                    console.error('Error sending zip file:', err);
+                    console.error('Error sending zip file:', err); // Log download error
                 }
             });
         });
     } catch (error) {
-        console.error('Error during conversion:', error);
-        // Return an error response if any exception occurs
+        console.error('Error during conversion:', error); // Log entire error
         res.status(500).json({ error: `Error during conversion: ${error.message}` });
     }
 });
