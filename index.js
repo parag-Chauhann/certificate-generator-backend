@@ -77,6 +77,20 @@ app.post('/api/convert', upload.array('files'), async (req, res) => {
         res.status(500).json({ error: `Error during conversion: ${error.message}` });
     }
 });
+const { exec } = require('child_process');
+
+exec('soffice --version', (err, stdout, stderr) => {
+  if (err) {
+    console.error('LibreOffice not found:', err);
+  } else {
+    console.log('LibreOffice version:', stdout);
+  }
+});
+
+console.log('PATH:', process.env.PATH);
+
+process.env.PATH = `C:\\Program Files\\LibreOffice\\program;${process.env.PATH}`;
+
 
 // Start the server
 app.listen(PORT, () => {

@@ -1,23 +1,17 @@
-# Use an official Node.js image as a base
-FROM node:16
+FROM node:18-slim
 
 # Install LibreOffice
 RUN apt-get update && apt-get install -y libreoffice
 
-# Set the working directory
-WORKDIR /usr/src/app
+# Set up your working directory
+WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
-
-# Install dependencies
+# Copy the files and install dependencies
+COPY . /app
 RUN npm install
 
-# Copy the rest of the application code
-COPY . .
-
-# Expose the port the app runs on
+# Expose the port
 EXPOSE 5000
 
-# Start the application
+# Start the app
 CMD ["node", "index.js"]
